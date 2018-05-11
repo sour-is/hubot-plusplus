@@ -76,16 +76,14 @@ module.exports = (robot) ->
     unless name? && name != ''
       [name, lastReason] = scoreKeeper.last(room)
       reason = lastReason if !reason? && lastReason?
-
-    [score, reasonScore] = if operator.substr(0,2) == "+="
-              scoreKeeper.addN(name, parseInt(operator.substr(2).trim(),10), from, room, reason)
-
-    [score, reasonScore] = if operator.substr(0,2) == "-="
-              scoreKeeper.subtractN(name, parseInt(operator.substr(2).trim(),10), from, room, reason)
         
     # do the {up, down}vote, and figure out what the new score is
     [score, reasonScore] = if operator == "++"
               scoreKeeper.add(name, from, room, reason)
+            else if operator.substr(0,2) == "+="
+              scoreKeeper.addN(name, parseInt(operator.substr(2).trim(),10), from, room, reason)
+            else if operator.substr(0,2) == "-="
+              scoreKeeper.subtractN(name, parseInt(operator.substr(2).trim(),10), from, room, reason)
             else
               scoreKeeper.subtract(name, from, room, reason)
 
