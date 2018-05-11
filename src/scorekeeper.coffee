@@ -65,6 +65,34 @@ class ScoreKeeper
     else
       [null, null]
 
+  addN: (user, n, from, room, reason) ->
+    if @validate(user, from)
+      user = @getUser(user)
+      @storage.scores[user]+=n
+      @storage.reasons[user] ||= {}
+
+      if reason
+        @storage.reasons[user][reason] ||= 0
+        @storage.reasons[user][reason]+=n
+
+      @saveUser(user, from, room, reason)
+    else
+      [null, null]
+
+  subtractN: (user, n, from, room, reason) ->
+    if @validate(user, from)
+      user = @getUser(user)
+      @storage.scores[user]-=n
+      @storage.reasons[user] ||= {}
+
+      if reason
+        @storage.reasons[user][reason] ||= 0
+        @storage.reasons[user][reason]-=n
+
+      @saveUser(user, from, room, reason)
+    else
+      [null, null]
+      
   erase: (user, from, room, reason) ->
     user = @getUser(user)
 
