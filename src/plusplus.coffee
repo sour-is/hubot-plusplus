@@ -62,7 +62,7 @@ module.exports = (robot) ->
     [dummy, name, operator, reason] = msg.match
     from = msg.message.user.name.toLowerCase()
     room = msg.message.room
-
+    robot.logger.info operator
     # do some sanitizing
     reason = reason?.trim().toLowerCase()
 
@@ -79,7 +79,8 @@ module.exports = (robot) ->
 
     [score, reasonScore] = if operator.substr(0,2) == "+="
               scoreKeeper.addN(name, parseInt(operator.substr(2).trim()), from, room, reason)
-            else
+
+    [score, reasonScore] = if operator.substr(0,2) == "-="
               scoreKeeper.subtractN(name, parseInt(operator.substr(2).trim()), from, room, reason)
         
     # do the {up, down}vote, and figure out what the new score is
