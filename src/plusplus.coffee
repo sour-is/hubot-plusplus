@@ -19,6 +19,8 @@
 # Commands:
 #   <name>++ [<reason>] - Increment score for a name (for a reason)
 #   <name>-- [<reason>] - Decrement score for a name (for a reason)
+#   <name>+=<amount> [<reason>] - Increment by <amount> (for a reason)
+#   <name>-=<amount> [<reason>] - Decrement by <amount> (for a reason)
 #   hubot score <name> - Display the score for a name and some of the reasons
 #   hubot top <amount> - Display the top scoring <amount>
 #   hubot bottom <amount> - Display the bottom scoring <amount>
@@ -51,7 +53,7 @@ module.exports = (robot) ->
     # allow for spaces after the thing being upvoted (@user ++)
     \s*
     # the increment/decrement operator ++ or --
-    (\+\+|--|—)
+    (\+\+|--|—|\+=\s*\d+|\+=\s*\d+)
     # optional reason for the plusplus
     (?:\s+(?:#{reasonConjunctions})\s+(.+))?
     $ # end of line
@@ -75,6 +77,11 @@ module.exports = (robot) ->
       [name, lastReason] = scoreKeeper.last(room)
       reason = lastReason if !reason? && lastReason?
 
+    [score, reasonScore] = if operator.substr(0,2) == "+="
+              scoreKeeper.addN(name, parseInt(operator.substr(2).trim()), from, room, reason)
+            else
+              scoreKeeper.subtractN(name, parseInt(operator.substr(2).trim()), from, room, reason)
+        
     # do the {up, down}vote, and figure out what the new score is
     [score, reasonScore] = if operator == "++"
               scoreKeeper.add(name, from, room, reason)
