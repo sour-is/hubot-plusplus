@@ -53,7 +53,7 @@ module.exports = (robot) ->
     # allow for spaces after the thing being upvoted (@user ++)
     \s*
     # the increment/decrement operator ++ or --
-    (\+\+|--|—|\+=\s*\d+|\+=\s*\d+)
+    (\+\+|--|—|\+=\s*\d+|\-=\s*\d+)
     # optional reason for the plusplus
     (?:\s+(?:#{reasonConjunctions})\s+(.+))?
     $ # end of line
